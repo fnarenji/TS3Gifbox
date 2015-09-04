@@ -72,18 +72,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entities\CupHolder.cs" />
-    <Compile Include="Entities\FileSystemNotificationModel.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Logging\LogicalOperationScope.cs" />
-    <Compile Include="Services\Contracts\IFileSystemWatchdog.cs" />
     <Compile Include="Services\Contracts\IVideoConverterService.cs" />
-    <Compile Include="Services\Contracts\IFileSystemWatcher.cs" />
-    <Compile Include="Services\InputConverterRunnable.cs" />
+    <Compile Include="Services\GifboxRunnable.cs" />
     <Compile Include="Services\Contracts\IRunnable.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\FileSystemWatchdog.cs" />
-    <Compile Include="Services\FileSystemWatcherService.cs" />
     <Compile Include="Services\VideoConverterService.cs" />
   </ItemGroup>
   <ItemGroup>

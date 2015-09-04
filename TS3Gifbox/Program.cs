@@ -108,12 +108,11 @@ namespace TS3Gifbox
             container.RegisterSingleton<TraceSource>(traceSource);
 
             // Services
-            container.Register<IFileSystemWatcherService, FileSystemWatcherService>(Lifestyle.Singleton);
             container.Register<IVideoConverterService, VideoConverterService>(Lifestyle.Singleton);
 
             // Runnables
             container.RegisterCollection<IRunnable>(new[] {
-                typeof(InputConverterRunnable)
+                typeof(GifboxRunnable)
             });
 
             container.Verify();
