@@ -35,21 +35,33 @@ namespace TS3Gifbox.Services
             
             string[] files = Directory.GetFiles(CupHolder.SourcePath);
 
-            using (LogicalOperationScope operation = new LogicalOperationScope("StartupInputConversion"))
+            using (IFileSystemWatchdog watchdog = _fileSystemWatchService.SetupFileSystemWatch(CupHolder.SourcePath))
             {
-                foreach (string file in files)
+                #region Startup Input Conversion
+                using (LogicalOperationScope operation = new LogicalOperationScope("StartupInputConversion"))
                 {
-                    _logger.TraceEvent(TraceEventType.Information, 0, "Converting file {0}", file);
+                    foreach (string file in files)
+                    {
+                        _logger.TraceEvent(TraceEventType.Information, 0, "Converting file {0}", file);
 
-                    await _videoConverterService.Convert(file);
-
-
+                        try
+                        {
+                            await _videoConverterService.ConvertFile(file);
+                        }
+                        catch (Exception e)
+                        {
+                            _logger.TraceEvent(TraceEventType.Error,
+                                0,
+                                CupHolder.Constants.ErrorMessages.Conversion,
+                                file,
+                                e);
+                        }
+                    }
                 }
-            }
+                #endregion
 
-            for (;;)
-            {
-                using (IFileSystemWatchdog watchdog = _fileSystemWatchService.SetupFileSystemWatch(CupHolder.SourcePath))
+                #region Input file loop
+                for (;;)
                 {
                     using (LogicalOperationScope operation = new LogicalOperationScope("InputConversion"))
                     {
@@ -57,9 +69,24 @@ namespace TS3Gifbox.Services
 
                         _logger.TraceInformation("{0} | {1}", notification.ChangeType, notification.FilePath);
 
-                        await _videoConverterService.Convert(notification.FilePath);
+                        if (new[] { WatcherChangeTypes.Created, WatcherChangeTypes.Changed }.Contains(notification.ChangeType))
+                        {
+                            try
+                            {
+                                await _videoConverterService.ConvertFile(notification.FilePath);
+                            }
+                            catch (Exception e)
+                            {
+                                _logger.TraceEvent(TraceEventType.Error,
+                                    0,
+                                    CupHolder.Constants.ErrorMessages.Conversion,
+                                    notification.FilePath,
+                                    e);
+                            }
+                        }
                     }
-                }
+                } 
+                #endregion
             }
         }
     }

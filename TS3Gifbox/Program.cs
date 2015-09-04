@@ -19,9 +19,9 @@ namespace TS3Gifbox
             TraceSource traceSource = new TraceSource("TS3Gifbox");
             traceSource.TraceInformation("Starting TS3Gifbox...");
 
-            #region CupHolda
-            CupHolder.SourcePath = ConfigurationManager.AppSettings["source"];
-            CupHolder.TargetPath = ConfigurationManager.AppSettings["target"];
+            #region Source and targets paths
+            CupHolder.SourcePath = ConfigurationManager.AppSettings["sourcePath"];
+            CupHolder.TargetPath = ConfigurationManager.AppSettings["targetPath"];
 
             if (!Directory.Exists(CupHolder.SourcePath))
             {
@@ -52,21 +52,53 @@ namespace TS3Gifbox
                     return;
                 }
             }
+
+            traceSource.TraceEvent(TraceEventType.Information, 0, "Target path: {0}", CupHolder.TargetPath);
             #endregion
 
             #region FFmpeg
+            
+            CupHolder.FFmpegExecutablePath = ConfigurationManager.AppSettings["FFmpegExecutablePath"];
 
-            traceSource.TraceEvent(TraceEventType.Information, 0, "Target path: {0}", CupHolder.TargetPath);
-
-            if (!File.Exists(CupHolder.Constants.FFMpegExecutablePath))
+            if (!File.Exists(CupHolder.FFmpegExecutablePath))
             {
                 traceSource.TraceEvent(TraceEventType.Error, 0,
-                    "The executable file for FFMpeg ({0}) was not present in the working directory ({1}).",
-                    CupHolder.Constants.FFMpegExecutablePath,
-                    Environment.CurrentDirectory);
+                    "The executable file for FFmpeg ({0}) was not found.",
+                    CupHolder.FFmpegExecutablePath);
 
                 return;
             }
+
+            #endregion
+
+            #region Imagemagick Convert 
+
+            CupHolder.ImageMagickConvertExecutablePath = ConfigurationManager.AppSettings["imagemagickConvertExecutablePath"];
+
+            if (!File.Exists(CupHolder.ImageMagickConvertExecutablePath))
+            {
+                traceSource.TraceEvent(TraceEventType.Error, 0,
+                    "The executable file for ImageMagick Convert ({0}) was not found.",
+                    CupHolder.ImageMagickConvertExecutablePath);
+
+                return;
+            }
+
+            #endregion
+
+            #region Gifsicle 
+
+            CupHolder.GifsicleExecutablePath = ConfigurationManager.AppSettings["gifsicleExecutablePath"];
+
+            if (!File.Exists(CupHolder.GifsicleExecutablePath))
+            {
+                traceSource.TraceEvent(TraceEventType.Error, 0,
+                    "The executable file for Gifsicle ({0}) was not found.",
+                    CupHolder.GifsicleExecutablePath);
+
+                return;
+            }
+
             #endregion
 
             #region IoC Container
@@ -77,6 +109,7 @@ namespace TS3Gifbox
 
             // Services
             container.Register<IFileSystemWatcherService, FileSystemWatcherService>(Lifestyle.Singleton);
+            container.Register<IVideoConverterService, VideoConverterService>(Lifestyle.Singleton);
 
             // Runnables
             container.RegisterCollection<IRunnable>(new[] {

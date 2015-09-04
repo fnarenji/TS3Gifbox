@@ -18,12 +18,40 @@ namespace TS3Gifbox.Entities
         /// </summary>
         public static string TargetPath;
 
+        /// <summary>
+        /// The path to the FFmpeg executable
+        /// </summary>
+        public static string FFmpegExecutablePath;
+
+        /// <summary>
+        /// The path to the ImageMagick Convert executable
+        /// </summary>
+        public static string ImageMagickConvertExecutablePath;
+
+        /// <summary>
+        /// The path to the Gifsicle executable
+        /// </summary>
+        public static string GifsicleExecutablePath;
+
         public static class Constants
         {
-            /// <summary>
-            /// The path to the FFMpeg executable
-            /// </summary>
-            public const string FFMpegExecutablePath = "ffmpeg.exe";
+            public static class ErrorMessages
+            {
+                public const string WorkerProcess = @"An error occured while calling {0} on the input file.
+
+Standard output:
+{1}
+
+Error output:
+{2}
+
+Exception:
+{3}";
+                public const string Conversion = @"An error occured while converting file {0}. Aborting operation.
+
+Exception:
+{1}";
+            }
         }
     }
 }
