@@ -1,0 +1,22 @@
+{
+  "name": "ts3gifbox",
+  "version": "0.0.1",
+  "description": "Rotate TS3 server GFX banner.",
+  "main": "main.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SKNZ/TS3Gifbox.git"
+  },
+  "author": "SKNZ",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SKNZ/TS3Gifbox/issues"
+  },
+  "homepage": "https://github.com/SKNZ/TS3Gifbox#readme",
+  "private": true
+}
