@@ -2,8 +2,20 @@
   "name": "ts3gifbox",
   "version": "0.0.1",
   "description": "Rotate TS3 server GFX banner.",
-  "main": "main.js",
-  "dependencies": {},
+  "main": "index.js",
+  "dependencies": {
+    "asyncawait": "^1.0.3",
+    "bluebird": "^3.3.3",
+    "content-disposition": "^0.5.1",
+    "fluent-ffmpeg": "^2.0.1",
+    "fs-extra": "^0.26.5",
+    "httpreq": "^0.4.16",
+    "mmmagic": "^0.4.1",
+    "node-teamspeak": "^1.0.10",
+    "pipes-and-filters": "0.0.4",
+    "temp": "^0.8.3",
+    "valid-url": "^1.0.9"
+  },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
