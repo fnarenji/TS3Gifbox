@@ -1,0 +1,13 @@
+module.exports = {
+    SQ_SERVER: '127.0.0.1',
+    SQ_PORT: '10011',
+    SQ_USER: 'username',
+    SQ_PASSWORD: 'password',
+    CHANNEL_NAME: 'channelname',
+    BOT_NAME: 'botname',
+    GIFBOX_FOLDER: '/absolute/path/to/gifbox/',
+    GIFBOX_URI: 'https://server.com/path/to/gifbox/',
+    MAX_CONTENT_SIZE_BYTES: 10 * 1024 * 1024, // 10 Mo in bytes
+    ROTATION_INTERVAL_MS: 1 * 60 * 1000,
+    VIRTUAL_SERVER_ID: 1
+};
