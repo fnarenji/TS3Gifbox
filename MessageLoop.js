@@ -89,9 +89,9 @@ function setupNotifications(client,
     return (async(function(client, selfId, maxContentSizeBytes, gifboxFolder) {
         // Register for private message notifications
         await (client.sendAsync('servernotifyregister',
-                {
-                    event: 'textprivate'
-                }));
+                    {
+                        event: 'textprivate'
+                    }));
 
         console.log('Listening for messages...');
 
@@ -160,7 +160,7 @@ function validateInput(context, next) {
 
             // Add extracted uri to context
             context.uri = content;
-            
+
             // Proceed with pipeline
             return next(null, context);
         } else {
@@ -175,7 +175,7 @@ function validateInput(context, next) {
 
 function fetch(context, next) {
     var uri = context.uri;    
-     
+
     var options = {
         url: uri,
         method: 'HEAD',
@@ -199,14 +199,14 @@ function fetch(context, next) {
 
         await (context.answer(
                     'Fichier trop gros (> '
-                    + context.MAX_CONTENT_SIZE_BYTES + ') !'));
+                        + context.MAX_CONTENT_SIZE_BYTES + ') !'));
 
         return next(null, Pipeline.break);
     }
 
     // If we have content-disposition
     // The server might specify a filename, which we'd want to save
-    if (headers.hasOwnProperty('content-disposition')) {
+    if (typeof headers['content-disposition'] !== "undefined") {
         var disposition =
             ContentDisposition.parse(headers['content-disposition']);
 
@@ -215,9 +215,9 @@ function fetch(context, next) {
 
     var tempFile = Temp.path('gifbox-');
     console.log(
-        'Downloading to file '
-        + tempFile
-        + '...');
+            'Downloading to file '
+            + tempFile
+            + '...');
 
     // Download to the temp file
     console.log('Downloading ' + uri);
@@ -230,8 +230,8 @@ function fetch(context, next) {
     } catch (e) {
         console.log('Download failed');
         await (context.answer(
-            'Une erreur est survenue pendant le téléchargement:' + EOL
-            + e.toString()));
+                    'Une erreur est survenue pendant le téléchargement:' + EOL
+                    + e.toString()));
 
         return next(null, Pipeline.break);
     }
@@ -247,7 +247,7 @@ function validateData(context, next) {
 
     var magic = Promise.promisifyAll(
             new mmm.Magic(mmm.MAGIC_MIME_TYPE));
-    
+
     // Get mime type of file
     var mimeType = await (magic.detectFileAsync(inputTempFile));
 
@@ -275,9 +275,9 @@ function convertData(context, next) {
         context.outputTempFile = inputTempFile;
         context.isVideo = false;
 
-    // If its a video, or a gif
+        // If its a video, or a gif
     } else if (mimeType.startsWith('video/')
-                || mimeType === 'image/gif') {
+            || mimeType === 'image/gif') {
         console.log('Got video. Converting.');
         context.answer('Conversion de la vidéo...');
 
@@ -312,9 +312,9 @@ function ffmpegPaletteGen(context, next) {
             });
 
     console.log(
-        'FFmpeg step 1 will write to file '
-        + tempFile
-        + '...');
+            'FFmpeg step 1 will write to file '
+            + tempFile
+            + '...');
 
     await (new Promise(function (resolve, reject) {
         // Generate palette
@@ -342,9 +342,9 @@ function ffmpegPaletteuse(context, next) {
             });
 
     console.log(
-        'FFmpeg step 2 will write to file '
-        + tempFile
-        + '...');
+            'FFmpeg step 2 will write to file '
+            + tempFile
+            + '...');
 
     try {
         await (new Promise(function (resolve, reject) {
@@ -384,15 +384,16 @@ function add(context, next) {
     var outputFileName = urlPathName;
 
     // If the server had provided a file name
-    if (context.hasOwnProperty('serverProvidedFileName')
-        // Check if not empty
-        && context.serverProvidedFileName.length != 0
-        // Check if not blank
-        && context.serverProvidedFileName.trim()) {
+    if (context.hasOwnProperty('serverProvidedFileName') &&
+            typeof context.serverProvidedFileName !== "undefined" &&
+            // Check if not empty, not blank
+            context.serverProvidedFileName.length != 0 && 
+            context.serverProvidedFileName.trim()) {
+
         // Set as target
         outputFileName = context.serverProvidedFileName;
     }
-    
+
     // Get file name
     var outputFileName = path.basename(outputFileName);
 

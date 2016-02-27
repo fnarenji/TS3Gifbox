@@ -4,6 +4,7 @@
  * Purpose: Manages a rotation of GIF files on TeamSpeak (GFX Banner)
  * TODO:
  *  - Pipeline doesn't track temp files correctly in case of error
+ *  - Replace the conversion pipeline with a producer/consumer model
  *
  **/
 
