@@ -12,10 +12,14 @@
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var Promise = require('bluebird');
+
+// Modules
+var config = require('./config');
 var TeamspeakClient = require('node-teamspeak');
 var RotationLoop = require('./RotationLoop');
 var MessageLoop = require('./MessageLoop');
-var config = require('./config');
+var TimeoutLoop = require('./TimeoutLoop');
+
 
 var main = async (function () {
     var client = new TeamspeakClient(config.SQ_SERVER, config.SQ_PORT);
@@ -49,7 +53,9 @@ var main = async (function () {
             RotationLoop.runAsync(client,
                 config.GIFBOX_URI,
                 config.GIFBOX_FOLDER,
-                config.ROTATION_INTERVAL_MS)
+                config.ROTATION_INTERVAL_MS),
+            // Launch anti timeout loop
+            TimeoutLoop.runAsync(client)
     ]);
 });
 
