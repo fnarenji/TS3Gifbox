@@ -3,7 +3,7 @@ var await = require('asyncawait/await');
 var Promise = require('bluebird');
 var fs = Promise.promisifyAll(require('fs'));
 
-module.exports.runAsync = function (client, uri, folder, interval) {
+module.exports.runAsync = async (function (client, uri, folder, interval) {
     var fileIndex = 0;
 
     for (;;) {
@@ -31,4 +31,4 @@ module.exports.runAsync = function (client, uri, folder, interval) {
 
         await (Promise.delay(interval));
     }
-}
+});

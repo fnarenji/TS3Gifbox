@@ -20,10 +20,19 @@ var RotationLoop = require('./RotationLoop');
 var MessageLoop = require('./MessageLoop');
 var TimeoutLoop = require('./TimeoutLoop');
 
-
 var main = async (function () {
     var client = new TeamspeakClient(config.SQ_SERVER, config.SQ_PORT);
     Promise.promisifyAll(client);
+
+    client.on('error', function (err) {
+        console.log('ERROR !');
+        console.log(err);
+    });
+
+    client.on('closed', function (err) {
+        console.log('Socket closed !');
+        process.exit(1);
+    });
 
     console.log('Logging in...');
     // Log in
@@ -49,13 +58,13 @@ var main = async (function () {
                 config.CHANNEL_NAME,
                 config.MAX_CONTENT_SIZE_BYTES,
                 config.GIFBOX_FOLDER),
+            // Launch anti timeout loop
+            TimeoutLoop.runAsync(client),
             // Launch gfx rotation
             RotationLoop.runAsync(client,
                 config.GIFBOX_URI,
                 config.GIFBOX_FOLDER,
                 config.ROTATION_INTERVAL_MS),
-            // Launch anti timeout loop
-            TimeoutLoop.runAsync(client)
     ]);
 });
 
