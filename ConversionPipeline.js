@@ -58,7 +58,7 @@ function ffmpegPaletteuse(inputTempFiles, next) {
 
     try {
         await (new Promise(function (resolve, reject) {
-            // Generate palette
+            // Generate gif
             // FFmpeg params found on the interwebz
             ffmpeg()
                 .input(inputTempFiles.inputTempFile)

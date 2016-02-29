@@ -14,10 +14,7 @@ var url = require('url');
 var path = require('path');
 var ConversionPipeline = require('./ConversionPipeline');
 
-module.exports.handleAsync = async (function (
-            data,
-            client,
-            selfId) {
+module.exports.handleAsync = async (function (data, client, selfId) {
     // Build context for pipeline
     var context = {
         data: data,
