@@ -2,13 +2,14 @@ var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var Promise = require('bluebird');
 var fs = Promise.promisifyAll(require('fs'));
+var config = require('./config');
 
-module.exports.runAsync = async (function (client, uri, folder, interval) {
+module.exports.runAsync = async (function (client) {
     var fileIndex = 0;
 
     for (;;) {
         // List all files in target folder
-        var files = await (fs.readdirAsync(folder));
+        var files = await (fs.readdirAsync(config.GIFBOX_FOLDER));
 
         if (fileIndex >= files.length) {
             fileIndex = 0;
@@ -17,18 +18,18 @@ module.exports.runAsync = async (function (client, uri, folder, interval) {
 
         var fileName = files[fileIndex];
 
-        var gifUri = uri + fileName;
+        var uri = config.GIFBOX_URI + fileName;
 
         console.log("Changing to GFX " + fileIndex + " (" + fileName + ").");
-        console.log("New GFX uri: " + gifUri);
+        console.log("New GFX uri: " + uri);
 
         await (client.sendAsync("serveredit",
                     {
-                        virtualserver_hostbanner_gfx_url: gifUri
+                        virtualserver_hostbanner_gfx_url: uri
                     }));
 
         fileIndex++;
 
-        await (Promise.delay(interval));
+        await (Promise.delay(config.ROTATION_INTERVAL_MS));
     }
 });

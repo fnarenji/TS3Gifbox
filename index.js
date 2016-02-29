@@ -12,6 +12,11 @@
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 var Promise = require('bluebird');
+require("console-stamp")(console,
+        {
+            pattern : "dd/mm/yyyy HH:MM:ss",
+            label: false
+        });
 
 // Modules
 var config = require('./config');
@@ -19,6 +24,7 @@ var TeamspeakClient = require('node-teamspeak');
 var RotationLoop = require('./RotationLoop');
 var MessageLoop = require('./MessageLoop');
 var TimeoutLoop = require('./TimeoutLoop');
+
 
 var main = async (function () {
     var client = new TeamspeakClient(config.SQ_SERVER, config.SQ_PORT);
@@ -29,7 +35,7 @@ var main = async (function () {
         console.log(err);
     });
 
-    client.on('closed', function (err) {
+    client.on('closed', function () {
         console.log('Socket closed !');
         process.exit(1);
     });
@@ -51,20 +57,13 @@ var main = async (function () {
                     client_nickname: config.BOT_NAME 
                 }));
 
-
     await([ 
             // Launch message listener loop
-            MessageLoop.runAsync(client,
-                config.CHANNEL_NAME,
-                config.MAX_CONTENT_SIZE_BYTES,
-                config.GIFBOX_FOLDER),
+            MessageLoop.runAsync(client),
             // Launch anti timeout loop
             TimeoutLoop.runAsync(client),
             // Launch gfx rotation
-            RotationLoop.runAsync(client,
-                config.GIFBOX_URI,
-                config.GIFBOX_FOLDER,
-                config.ROTATION_INTERVAL_MS),
+            RotationLoop.runAsync(client)
     ]);
 });
 
